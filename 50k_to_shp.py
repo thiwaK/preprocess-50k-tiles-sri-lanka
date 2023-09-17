@@ -8,20 +8,27 @@ import shutil
 
 break_ = 0
 
-base = r"E:\Spatial_Data\LK\50K\ALL_50K_Sheets\Digital_Data_For_Self_Study\Other_Digital_Data"
-out = r"E:\Spatial_Data\LK\50K\ALL_50K_Sheets\250data"
+base = r"D:\New folder (2)\50,000 shapefiles Digital"
+out = r"D:\New folder (2)\250data"
+
+if not os.path.isdir(out):
+		os.mkdir(out)
+
+log = open(r"D:\New folder (2)\250data\log.txt", "w")
 
 # Iterae over tiles (1 to 92)
 for tile in [x for x in os.walk(base)][0][1]:
+
 	print("Tile", tile)
 
 	# Iterae over feature classess (admin, water, building, road, ...)
 	for feature in [x for x in os.walk(os.path.join(base, tile))][0][1]:
 		
+		# Skip unnecessary folders/files
 		if feature in ['info']:
 			continue
 
-		print("    ", feature,  end=' ')
+		# print("    ", feature,  end=' ')
 
 		featureclass = os.path.join(base, tile, feature)
 
@@ -38,10 +45,13 @@ for tile in [x for x in os.walk(base)][0][1]:
 		rc = p.returncode
 
 		if rc != 0:
+			log.write(f"{tile}/{feature}")
 			print(featureclass)
+			shutil.rmtree(os.path.join(out, tile, feature))
 			break_ = 1
-	if break_:
-		shutil.rmtree(os.path.join(out, tile))
-		break_ = 0
+			log.flush()
+			os.fsync(log.fileno())
+
 
 	print()
+log.close()

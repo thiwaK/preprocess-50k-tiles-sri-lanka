@@ -1,7 +1,7 @@
 import os
 import geopandas as gpd
 
-base = r"E:\Spatial_Data\LK\50K\ALL_50K_Sheets\SHP"
+base = r"D:\New folder (2)\250data"
 
 
 def get_all_shp_files(directory):
